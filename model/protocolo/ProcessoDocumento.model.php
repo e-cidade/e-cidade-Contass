@@ -391,14 +391,14 @@ class ProcessoDocumento
       throw new Exception(_M(URL_MENSAGEM_PROCESSO_DOCUMENTO . 'erro_processo_nao_informado'));
     }
 
-    $this->iOi = $this->salvarArquivoBanco();
+    $this->iOid = $this->salvarArquivoBanco();
     $this->sNomeDocumento = basename($this->sCaminhoArquivo);
 
     $oDaoProtprocessodocumento = db_utils::getDao('protprocessodocumento');
     $oDaoProtprocessodocumento->p01_sequencial    = null;
     $oDaoProtprocessodocumento->p01_protprocesso  = $this->getProcessoProtocolo()->getCodProcesso();
     $oDaoProtprocessodocumento->p01_descricao     = $this->sDescricao;
-    $oDaoProtprocessodocumento->p01_documento     = $this->iOi;
+    $oDaoProtprocessodocumento->p01_documento     = $this->iOid;
     $oDaoProtprocessodocumento->p01_nomedocumento = $this->sNomeDocumento;
     $oDaoProtprocessodocumento->p01_depart        = db_getsession('DB_coddepto');
     $oDaoProtprocessodocumento->p01_nivelacesso = $this->iNivelAcesso;
