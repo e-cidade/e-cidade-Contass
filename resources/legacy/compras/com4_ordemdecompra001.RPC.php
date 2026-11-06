@@ -62,13 +62,16 @@ try {
       $oDadosOrdem->sCgm          = urlencode($oOrdemCompra->getFornecedor()->getNome());
       $oDadosOrdem->sObservacao   = urlencode($oOrdemCompra->getObservacao());
       $oDadosOrdem->dAnulacao     = '';
+      $oDadosOrdem->sObsAnulacao  = '';
       $oDadosOrdem->iTipoCompra   = $oOrdemCompra->getTipoCompra();
       $oDadosOrdem->nTotalOrdem   = db_formatar($oOrdemCompra->getTotalOrdem(), 'f');
+      $oDadosOrdem->nValorAnulado = db_formatar($oOrdemCompra->getValorAnulado(), 'f');
       $oDadosOrdem->nValorLancado = db_formatar($oOrdemCompra->getValorLancado(), 'f');
       $oDadosOrdem->nValorLancar  = db_formatar($oOrdemCompra->getValorLancar(), 'f');
 
       if ($oOrdemCompra->getAnulacao()){
         $oDadosOrdem->dAnulacao    = db_formatar($oOrdemCompra->getAnulacao()->getDate(),'d');
+        $oDadosOrdem->sObsAnulacao = db_formatar($oOrdemCompra->getObsAnulacao(),'s');
       }
       $oRetorno->oDadosOrdem = $oDadosOrdem;
 
@@ -92,15 +95,14 @@ try {
 
         $oDadosItem = new stdClass();
         $oDadosItem->sNumeroEmpenho        = $oEmpenhoFinanceiro->getCodigo() . "/" . $oEmpenhoFinanceiro->getAnoUso();
-        $oDadosItem->iCodigoEmpenho        = $oEmpenhoFinanceiro->getNumero();
-        $oDadosItem->iCodigoMaterial       = $oEmpenhoItem->getItemMaterialCompras()->getMaterial();
-        $oDadosItem->sDescricaoMaterial    = $oEmpenhoItem->getItemMaterialCompras()->getDescricao();
         $oDadosItem->iSequencia            = $oEmpenhoItem->getSequencialAutorizacaoItem();
-        $oDadosItem->sDescricaoSolicitacao = urlencode($oEmpenhoItem->getDescricao());
+        $oDadosItem->sDescricaoMaterial    = "{$oEmpenhoItem->getItemMaterialCompras()->getMaterial()} - {$oEmpenhoItem->getItemMaterialCompras()->getDescricao()}";
+        $oDadosItem->sDescricaoCompleta    = "{$oEmpenhoItem->getItemMaterialCompras()->getDescricao()}. {$oEmpenhoItem->getItemMaterialCompras()->getComplemento()}";
         $oDadosItem->iQuantidade           = $oItemOrdemDeCompra->getQuantidade();
         $oDadosItem->nValorUnitario        = db_formatar($oItemOrdemDeCompra->getValorUnitario(), 'f');
         $oDadosItem->nValorTotal           = db_formatar($oItemOrdemDeCompra->getValor(), 'f');
         $oDadosItem->nQuantidadeAnulada    = $iQuantidadeAnulada;
+        $oDadosItem->nValorAnulado         = db_formatar($oItemOrdemDeCompra->getValorAnulado(), 'f');
         $oRetorno->aItensOrdem[] = $oDadosItem;
       }
 

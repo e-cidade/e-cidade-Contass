@@ -71,6 +71,12 @@ class ItemOrdemDeCompra {
   private $iQuantidadeAnulada;
 
   /**
+   * valor anulado do item
+   * @var number
+   */
+  private $nValorAnulado;
+
+  /**
    * retorna codigo do lancamento
    * @return integer
    */
@@ -136,6 +142,22 @@ class ItemOrdemDeCompra {
     $this->iQuantidadeAnulada = $iQuantidadeAnulada;
   }
 
+  /**
+   * Define o valor anulado do item
+   * @param float $valorAnulado
+   */
+  public function setValorAnulado(float $valorAnulado ) {
+    $this->nValorAnulado = $valorAnulado;
+  }
+
+  /**
+   * Retorna o valor anulado do item
+   * @return float $nValorAnulado
+   */
+  public function getValorAnulado() {
+    return $this->nValorAnulado;
+  }
+
   public function __construct( $iCodigoLancamento = null) {
 
     if (!empty($iCodigoLancamento)) {
@@ -144,6 +166,7 @@ class ItemOrdemDeCompra {
 
       $sCamposMatOrdemItem  = "m52_codlanc, m52_quant, m52_valor, m52_vlruni, e62_sequencial, ";
       $sCamposMatOrdemItem .= "(select coalesce(sum(m36_qtd), 0) from matordemitemanu where m36_matordemitem = m52_codlanc) as qtdanulado";
+      $sCamposMatOrdemItem .= ", (select coalesce(sum(m36_vrlanu), 0) from matordemitemanu where m36_matordemitem = m52_codlanc) as vlranulado";
 
       $sSqlMatOrdemItem = $oDaoMatOrdemItem->sql_queryItemEmpenho(null, $sCamposMatOrdemItem, null, "m52_codlanc = ". $iCodigoLancamento);
       $rsMatOrdemItem   = $oDaoMatOrdemItem->sql_record($sSqlMatOrdemItem);
@@ -159,6 +182,7 @@ class ItemOrdemDeCompra {
         $this->setValor($oDadosMatOrdemItem->m52_valor);
         $this->setValorUnitario($oDadosMatOrdemItem->m52_vlruni);
         $this->setQuantidadeAnulada($oDadosMatOrdemItem->qtdanulado);
+        $this->setValorAnulado($oDadosMatOrdemItem->vlranulado);
       }
     }
   }

@@ -85,18 +85,18 @@ if ($oOrdemCompra->getEmpenhoFinanceiro()->getInstituicao()->getCodigo() != db_g
     <table width="100%" border="0" >
 
       <tr>
-        <td class='negrito' width="150" >
+        <td class='negrito' width="108px" >
           Código:
         </td>
         <td class='dados' colspan="3">
           <label id='iCodigo'></label>
         </td>
-        <td rowspan="7" id="tdObservacoes" width="800" valign="top">
+        <td rowspan="4" id="tdObservacoes"  colspan="2" width="800" valign="top">
         </td>
       </tr>
 
       <tr>
-        <td class='negrito'>
+        <td class='negrito' width="108px">
           Fornecedor:
         </td>
         <td class='dados' colspan="3">
@@ -105,70 +105,74 @@ if ($oOrdemCompra->getEmpenhoFinanceiro()->getInstituicao()->getCodigo() != db_g
       </tr>
 
       <tr>
-        <td class='negrito' width="150">
+        <td class='negrito' width="108px">
           Data de Emissão:
         </td>
-        <td class='dados' nowrap="nowrap" >
+        <td class='dados' colspan="3">
           <label id='dtEmissao'></label>
         </td>
+      </tr>
 
-        <td class='negrito'width="150">
-          Data de Anulação:
+      <tr>
+        <td class='negrito' width="108px">
+          Departamento:
+        </td>
+        <td class='dados' colspan="3">
+          <label id='sDepartamento'></label>
+        </td>
+      </tr>
+
+      <tr>
+        <td class='negrito' width="108px">
+          Total da Ordem:
+        </td>
+        <td class='dados' >
+          <label id='nTotalOrdem'></label>
+        </td>
+
+        <td class='negrito' width="108px">
+          Valor Lançado:
+        </td>
+        <td class='dados' >
+          <label id='nValorLancado'></label>
+        </td>
+
+        <td class='negrito' width="108px">
+          Data Anulação:
         </td>
         <td class='dados' >
           <label id='dtAnulacao'></label>
         </td>
       </tr>
-
-       <tr>
-        <td class='negrito' width="150">
-          Departamento:
+      
+      <tr>
+        <td class='negrito' width="108px">
+          Valor Anulado:
         </td>
         <td class='dados' >
-          <label id='sDepartamento'></label>
+          <label id='nValorAnulado'></label>
         </td>
 
-        <td class='negrito'width="150">
-          Tipo de Compra:
-        </td>
-        <td class='dados' >
-          <label id='sTipoCompra'></label>
-        </td>
-      </tr>
-
-      <tr>
-        <td class='negrito'>
-          Total da Ordem:
-        </td>
-        <td class='dados' colspan="3">
-          <label id='nTotalOrdem'></label>
-        </td>
-      </tr>
-
-      <tr>
-        <td class='negrito'>
-          Valor Lançado:
-        </td>
-        <td class='dados' colspan="3">
-          <label id='nValorLancado'></label>
-        </td>
-      </tr>
-
-      <tr>
-        <td class='negrito'>
+        <td class='negrito' width="108px">
           A Lançar:
         </td>
-        <td class='dados' colspan="3">
+        <td class='dados' >
           <label id='nValorLancar'></label>
         </td>
-      </tr>
 
+        <td class='negrito' width="108px">
+          Obs. Anulação:
+        </td>
+        <td class='dados' >
+          <label id='sObsAnulacao'></label>
+        </td>
+      </tr>
 
       <tr id="trObservacaoInicial">
         <td class='negrito'>
           Observações:
         </td>
-        <td class='dados' colspan="3">
+        <td class='dados' >
           <textarea id="textAreaObs" rows="3" style="resize:none;overflow:auto; width: 100%; border: none;" readonly="readonly">
           </textarea>
         </td>
@@ -240,8 +244,10 @@ function js_retornoDadosOrdem(oAjax){
   $("sDepartamento").innerHTML = oRetorno.oDadosOrdem.iDepto + " - " + oRetorno.oDadosOrdem.sDepto.urlDecode();
   $("sFornecedor").innerHTML   = oRetorno.oDadosOrdem.iCgm   + " - " + oRetorno.oDadosOrdem.sCgm.urlDecode();
   $("dtAnulacao").innerHTML    = oRetorno.oDadosOrdem.dAnulacao;
-  $("sTipoCompra").innerHTML   = sTipoCompra.urlDecode();
+  $("sObsAnulacao").innerHTML  = oRetorno.oDadosOrdem.sObsAnulacao;
+  //$("sTipoCompra").innerHTML   = sTipoCompra.urlDecode(); // Retirado por nao ser relevante ao usuario
   $("nTotalOrdem").innerHTML   = oRetorno.oDadosOrdem.nTotalOrdem;
+  $("nValorAnulado").innerHTML = oRetorno.oDadosOrdem.nValorAnulado;
   $("nValorLancado").innerHTML = oRetorno.oDadosOrdem.nValorLancado;
   $("nValorLancar").innerHTML  = oRetorno.oDadosOrdem.nValorLancar;
   $("textAreaObs").value       = oRetorno.oDadosOrdem.sObservacao.urlDecode();
@@ -280,7 +286,7 @@ function js_verificarResolucaoUsuario() {
      * Setamos o estilo no textarea e adicionamos ele ao fieldset
      */
     $('textAreaObs').style.width  = '100%';
-    $('textAreaObs').rows   = '7';
+    $('textAreaObs').rows   = '4';
     oFieldset.appendChild($('textAreaObs'));
     $("tdObservacoes").appendChild(oFieldset);
     $("tdObservacoes").vAlign = 'top';

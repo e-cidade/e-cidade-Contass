@@ -75,40 +75,34 @@ js_gridItens();
   oGridItens.nameInstance = 'oGridItens';
   oGridItens.setCellWidth(['80px' ,
                            '80px' ,
-                           '80px' ,
                            '270px',
-                           '70px' ,
-                           '260px',
 //                           '270px',
                            '70px',
                            '80px',
                            '80px',
-                           '80px']);
+                           '80px',
+                           '80px',]);
 
   oGridItens.setCellAlign(['center'  ,
-                           'center'  ,
-                           'center'  ,
-                           'left',
                            'center'  ,
                            'left',
 //                           'left',
                            'right'  ,
                            'right'  ,
                            'right'  ,
+                           'right'  ,
                            'right']);
 
 
-  oGridItens.setHeader(['Núm. Empenho',
-                        'Cód. Empenho',
-                        'Cód. Material',
-                        'Descrição Material',
-                        'Sequencial',
-                        'Descrição Solicitação',
+  oGridItens.setHeader(['Empenho',
+                        'Ordem',
+                        'Item',
 //                        'Observação',
                         'Quantidade',
                         'Valor Unitário',
                         'Valor Total',
-                        'Qtd Anulada']);
+                        'Qtd Anulada',
+                        'Vlr. Anulado']);
 
 //  oGridItens.aHeaders[6].lDisplayed = false;
 
@@ -155,15 +149,13 @@ js_gridItens();
 
        var aRow     = [];
            aRow[0]  = oDado.sNumeroEmpenho                   ;
-           aRow[1]  = oDado.iCodigoEmpenho                   ;
-           aRow[2]  = oDado.iCodigoMaterial                  ;
-           aRow[3]  = oDado.sDescricaoMaterial.urlDecode()   ;
-           aRow[4]  = oDado.iSequencia                       ;
-           aRow[5]  = oDado.sDescricaoSolicitacao.urlDecode().substr(0, 45) ;
-           aRow[6]  = '&nbsp;' + oDado.iQuantidade           ;
-           aRow[7]  = oDado.nValorUnitario                   ;
-           aRow[8]  = oDado.nValorTotal                      ;
-           aRow[9] = oDado.nQuantidadeAnulada               ;
+           aRow[1]  = oDado.iSequencia                       ;
+           aRow[2]  = oDado.sDescricaoMaterial.urlDecode().substr(0, 45)   ;
+           aRow[3]  = '&nbsp;' + oDado.iQuantidade           ;
+           aRow[4]  = oDado.nValorUnitario                   ;
+           aRow[5]  = oDado.nValorTotal                      ;
+           aRow[6] = oDado.nQuantidadeAnulada               ;
+           aRow[7] = oDado.nValorAnulado                     ;
            oGridItens.addRow(aRow);
 
    });
@@ -174,7 +166,7 @@ js_gridItens();
       oParametros = {iWidth:'150', oPosition : {sVertical : 'T', sHorizontal : 'L'}};
      // oGridItens.setHint(iLinha, 1, oDado.sDebito,  oParametros);
       // ou sem passar parametros
-      oGridItens.setHint(iLinha, 5, oDado.sDescricaoSolicitacao.urlDecode());
+      oGridItens.setHint(iLinha, 2, oDado.sDescricaoCompleta.urlDecode());
     });
 
  }

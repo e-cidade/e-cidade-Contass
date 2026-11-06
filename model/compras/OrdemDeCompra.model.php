@@ -52,6 +52,12 @@ class OrdemDeCompra {
   private $oAnulacao;
 
   /**
+   * Observação da anulação da ordem
+   * @var ?string
+   */
+  private $sObsAnulacao;
+
+  /**
    * departamento da ordem de compra
    * @var DBDepartamento
    */
@@ -80,6 +86,12 @@ class OrdemDeCompra {
    * @var float
    */
   private $nTotalOrdem;
+
+  /**
+   * valor anulado da ordem
+   * @var ?float
+   */
+  private $nValorAnulado;
 
   /**
    * valor lancado
@@ -145,6 +157,8 @@ class OrdemDeCompra {
       $sCamposMatOrdem .= "m51_valortotal , ";
       $sCamposMatOrdem .= "m53_data       , ";
       $sCamposMatOrdem .= "($sSqlMatestoqueitemoc) as valorlancado ";
+      $sCamposMatOrdem .= ", m53_obs      , ";
+      $sCamposMatOrdem .= "(select coalesce(sum(m36_vrlanu), 0) from matordemitemanu inner join matordemitem on matordemitemanu.m36_matordemitem = matordemitem.m52_codlanc and m52_codordem = {$this->iCodigoOrdem}) as valoranulado ";
 
       $sSqlMatOrdem = $oDaoMatOrdem->sql_query_tot( null,$sCamposMatOrdem , null, "m51_codordem = {$iCodigoOrdem}");
       $rsMatOrdem   = $oDaoMatOrdem->sql_record($sSqlMatOrdem);
@@ -154,7 +168,7 @@ class OrdemDeCompra {
       }
 
       $oDadosMatOrdem = db_utils::fieldsMemory($rsMatOrdem, 0);
-      $nLancar        = $oDadosMatOrdem->m51_valortotal - $oDadosMatOrdem->valorlancado;
+      $nLancar        = $oDadosMatOrdem->m51_valortotal - $oDadosMatOrdem->valoranulado - $oDadosMatOrdem->valorlancado;
       $this->iCodigoFornecedor = $oDadosMatOrdem->m51_numcgm;
       $this->iCodigoDepartamento = $oDadosMatOrdem->m51_depto;
       $this->setEmissao(new DBDate($oDadosMatOrdem->m51_data));
@@ -162,6 +176,7 @@ class OrdemDeCompra {
       $this->setTipoCompra($oDadosMatOrdem->m51_tipo);
       $this->setTotalOrdem($oDadosMatOrdem->m51_valortotal);
       $this->setValorLancado($oDadosMatOrdem->valorlancado);
+      $this->setValorAnulado($oDadosMatOrdem->valoranulado);
       $this->setValorLancar($nLancar);
 
 
@@ -171,6 +186,7 @@ class OrdemDeCompra {
        */
       if ( $oDadosMatOrdem->m53_data != '' ) {
         $this->setAnulacao(new DBDate($oDadosMatOrdem->m53_data));
+        $this->setObsAnulacao(substr($oDadosMatOrdem->m53_obs, 0, 90));
       }
     }
   }
@@ -221,6 +237,22 @@ class OrdemDeCompra {
    */
   public function setAnulacao(DBDate $oDataAnulacao){
     $this->oAnulacao  = $oDataAnulacao;
+  }
+
+  /**
+   * retorna a observação de anulacao da ordem de compra
+   * @return string
+   */
+  public function getObsAnulacao(){
+    return $this->sObsAnulacao;
+  }
+
+  /**
+   * definimos a observação de anulação da ordem de compra
+   * @param ?string $sObsAnulacao
+   */
+  public function setObsAnulacao(?string $sObsAnulacao){
+    $this->sObsAnulacao = $sObsAnulacao;
   }
 
   /**
@@ -331,6 +363,22 @@ class OrdemDeCompra {
     $this->nTotalOrdem = $nTotalOrdem;
   }
 
+    /**
+   * retorna valor anulado da ordem
+   * @return float
+   */
+  public function getValorAnulado() {
+    return $this->nValorAnulado;
+  }
+
+  /**
+   * define valor anulado da ordem
+   * @param float
+   */
+  public function setValorAnulado($nValorAnulado) {
+    $this->nValorAnulado = $nValorAnulado;
+  }
+
   /**
    * retorna valor a lancar
    * @return float
@@ -393,7 +441,7 @@ class OrdemDeCompra {
     if (count($this->aItens) == 0) {
 
       $oDaoMatOrdemItem  = db_utils::getDao('matordemitem');
-      $sSqlItens         = $oDaoMatOrdemItem->sql_query_ordcons(null, 'm52_codlanc', null, "m52_codordem = ".$this->getCodigoOrdem());
+      $sSqlItens         = $oDaoMatOrdemItem->sql_query_ordcons(null, 'm52_codlanc', "m52_sequen", "m52_codordem = ".$this->getCodigoOrdem());
       $rsMatOrdemItem    = $oDaoMatOrdemItem->sql_record($sSqlItens);
 
       if ($oDaoMatOrdemItem->erro_status == "0") {

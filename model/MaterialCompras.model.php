@@ -47,6 +47,13 @@ class MaterialCompras
   protected $sDescricao;
 
   /**
+   * Descrição do material
+   *
+   * @var ?string
+   */
+  protected $sComplemento;
+
+  /**
    * Verifica se o material é um serviço 
    *
    * @var bool
@@ -83,6 +90,7 @@ class MaterialCompras
 
         $oMaterial = db_utils::fieldsMemory($rsMaterial, 0, false, false, true);
         $this->sDescricao = $oMaterial->pc01_descrmater;
+        $this->sComplemento = $oMaterial->pc01_complmater;
         $this->lServico   = $oMaterial->pc01_servico == 't' ? true : false;
         $this->iCodanterior = $oMaterial->pc01_codmaterant;
       } else {
@@ -133,6 +141,21 @@ class MaterialCompras
     $this->sDescricao = $sDescricao;
   }
 
+  /**
+   * @return ?string
+   */
+  public function getComplemento()
+  {
+    return $this->sComplemento;
+  }
+
+  /**
+   * @param ?string $complemento
+   */
+  public function setComplemento(?string $complemento)
+  {
+    $this->sComplemento = $complemento;
+  }
 
   public function getElementos()
   {
